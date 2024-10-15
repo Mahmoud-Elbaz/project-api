@@ -23,15 +23,23 @@ namespace project_depi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SubCategory>>> GetSubCategories()
         {
-            return await _context.SubCategories.ToListAsync();
+            return await _context.SubCategories.Include(x=>x.Category).ToListAsync();
         }
 
         // GET: api/SubCategory/5/10
         [HttpGet("{productId}/{categoryId}")]
         public async Task<ActionResult<SubCategory>> GetSubCategory(Guid productId, Guid categoryId)
         {
-            var subCategory = await _context.SubCategories
+            var subCategory = await _context.SubCategories.Include(x => x.Category)
                 .FirstOrDefaultAsync(sc => sc.productId == productId && sc.categoryId == categoryId);
+
+            //var sub2 = from a in _context.SubCategories
+            //           where a.categoryId == categoryId && a.productId == productId
+            //           join b in _context.Products on a.productId equals b._id  
+            //           select new
+            //           {
+            //               a, b
+            //           };
 
             if (subCategory == null)
             {

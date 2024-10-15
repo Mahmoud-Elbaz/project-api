@@ -23,14 +23,14 @@ namespace project_depi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Cart_Product>>> GetCart_Products()
         {
-            return await _context.Cart_Product.ToListAsync();
+            return await _context.Cart_Product.Include(x=>x.Product).ToListAsync();
         }
 
         // GET: api/Cart_Product/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Cart_Product>> GetCart_Product(Guid id)
         {
-            var cart_Product = await _context.Cart_Product.FindAsync(id);
+            var cart_Product = await _context.Cart_Product.Where(x => x._id == id).Include(x => x.Product).FirstOrDefaultAsync();
 
             if (cart_Product == null)
             {

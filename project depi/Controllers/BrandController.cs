@@ -23,14 +23,14 @@ namespace project_depi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Brand>>> GetBrands()
         {
-            return await _context.Brands.ToListAsync();
+            return await _context.Brands.Include(x=>x.products).ToListAsync();
         }
 
         // GET: api/Brand/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Brand>> GetBrand(Guid id)
         {
-            var brand = await _context.Brands.FindAsync(id);
+            var brand = await _context.Brands.Where(x=>x._id == id).Include(x => x.products).FirstOrDefaultAsync();
 
             if (brand == null)
             {

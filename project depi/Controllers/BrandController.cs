@@ -27,6 +27,7 @@ namespace project_depi.Controllers
         }
 
         // GET: api/Brand/5
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Brand>> GetBrand(Guid id)
         {

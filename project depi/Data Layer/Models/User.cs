@@ -21,12 +21,17 @@ namespace project_depi.Data_Layer.Models
         [MinLength(8, ErrorMessage = "'Password' minimum length is 8")]
         public string password { get; set; }
 
+
+        [NotMapped]
+        [Compare("password", ErrorMessage = "'ConfirmPassword' and 'Password' do not match.")]
+        public string rePassword { get; set; }
+
         [Required]
         [Phone]
         public string phone { get; set; }
 
-        public DateTime createdAt { get; set; } = new DateTime();
-        public DateTime updatedAt { get; set; } = new DateTime();
+        public DateTime? createdAt { get; set; } = new DateTime();
+        public DateTime? updatedAt { get; set; } = new DateTime();
 
 
     }

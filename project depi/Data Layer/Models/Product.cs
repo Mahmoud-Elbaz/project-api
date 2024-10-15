@@ -10,11 +10,11 @@ namespace project_depi.Data_Layer.Models
         [ForeignKey("Brand")]
         public virtual Guid barndId { get; set; }
 
-        public virtual Brand Brand { get; set; }
+        public virtual Brand? Brand { get; set; }
 
         [ForeignKey("Category")]
         public virtual Guid categoryId { get; set; }
-        public virtual Category Category { get; set; }
+        public virtual Category? Category { get; set; }
 
         [Column(TypeName = "decimal(18,4)")]
         public double price { get; set; }
@@ -40,6 +40,6 @@ namespace project_depi.Data_Layer.Models
         public DateTime createdAt { get; set; } = new DateTime();
         public DateTime updatedAt { get; set; } = new DateTime();
 
-        public virtual ICollection<SubCategory> subCategories { get; set; }
+        public virtual ICollection<SubCategory>? subCategories { get; set; } = new List<SubCategory>();
     }
 }

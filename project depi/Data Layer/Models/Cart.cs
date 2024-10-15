@@ -12,9 +12,9 @@ namespace project_depi.Data_Layer.Models
         [ForeignKey("User")]
         public Guid cartOwner { get; set; }
 
-        public virtual User User { get; set; }
+        public virtual User? User { get; set; }
 
-        public ICollection<Cart_Product> Cart_Products { get; set; }
+        public ICollection<Cart_Product>? Cart_Products { get; set; } = new List<Cart_Product>();
 
         public DateTime createdAt { get; set; } = new DateTime();
         public DateTime updatedAt { get; set; } = new DateTime();

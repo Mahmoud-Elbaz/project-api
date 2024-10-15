@@ -15,7 +15,7 @@ namespace project_depi.Data_Layer.Models
         [Url]
         public string image { get; set; }
 
-        public virtual ICollection<Product> products { get; set; }
+        public virtual ICollection<Product>? products { get; set; } = new List<Product>();
         public DateTime createdAt { get; set; } = new DateTime();
         public DateTime updatedAt { get; set; } = new DateTime();
 

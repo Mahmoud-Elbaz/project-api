@@ -4,6 +4,7 @@ using project_depi.Data_Layer;
 using project_depi.Data_Layer.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace project_depi.Controllers
@@ -23,14 +24,13 @@ namespace project_depi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Cart>>> GetCarts()
         {
-            return await _context.Carts.Include(x=>x.Cart_Products).ToListAsync();
+            return await _context.Carts.Include(x => x.Cart_Products).ToListAsync();
         }
 
         // GET: api/Cart/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Cart>> GetCart(Guid id)
         {
-           
             var cart = await _context.Carts.Where(x => x._id == id).Include(x => x.Cart_Products).FirstOrDefaultAsync();
 
             if (cart == null)
@@ -95,6 +95,73 @@ namespace project_depi.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpPost("AddToCart")]
+        public async Task<IActionResult> AddToCart([FromBody] AddToCartRequest request)
+        {
+            Console.WriteLine($"AddToCart: userId={request.UserId}, productId={request.ProductId}, quantity={request.Quantity}");
+            try
+            {
+                var user = await _context.Users.FindAsync(request.UserId);
+                if (user == null) return NotFound("User not found");
+
+                var product = await _context.Products.FindAsync(request.ProductId);
+                if (product == null) return NotFound("Product not found");
+
+                var cart = await _context.Carts.Include(c => c.Cart_Products)
+                                    .FirstOrDefaultAsync(c => c.cartOwner == request.UserId);
+                if (cart == null)
+                {
+                    cart = new Cart
+                    {
+                        cartOwner = request.UserId,
+                        totalCartPrice = 0,
+                        numOfCartItemt = 0,
+                        createdAt = DateTime.UtcNow,
+                        updatedAt = DateTime.UtcNow,
+                        Cart_Products = new List<Cart_Product>()
+                    };
+                    _context.Carts.Add(cart);
+                }
+
+                if (cart.Cart_Products == null)
+                {
+                    cart.Cart_Products = new List<Cart_Product>();
+                }
+
+                var cartProduct = cart.Cart_Products.FirstOrDefault(cp => cp.productId == request.ProductId);
+                if (cartProduct == null)
+                {
+                    cartProduct = new Cart_Product
+                    {
+                        cartId = cart._id,
+                        productId = request.ProductId,
+                        count = request.Quantity,
+                        price = product.price * request.Quantity
+                    };
+                    cart.Cart_Products.Add(cartProduct);
+                }
+                else
+                {
+                    cartProduct.count += request.Quantity;
+                    cartProduct.price += product.price * request.Quantity;
+                }
+                cart.totalCartPrice += product.price * request.Quantity;
+                cart.numOfCartItemt += request.Quantity;
+                cart.updatedAt = DateTime.UtcNow;
+
+                // Add log before saving
+                Console.WriteLine("Saving cart changes...");
+                await _context.SaveChangesAsync();
+                Console.WriteLine("Cart changes saved.");
+
+                return Ok(cart);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         private bool CartExists(Guid id)

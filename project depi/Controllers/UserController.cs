@@ -53,7 +53,17 @@ namespace project_depi.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
+            if (UserExists(user.email))
+            {
+                return BadRequest(new { error = "Email already exist" });
+            }
             _context.Users.Add(user);
+
+            _context.Carts.Add(new Cart()
+            {
+                cartOwner = user.user_id,
+            });
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetUser), new { id = user.user_id }, user);
@@ -132,10 +142,13 @@ namespace project_depi.Controllers
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim("role", "user"),
+                new Claim("id", user.user_id.ToString()),
+                new Claim("name", user.name)
             };
 
-            var tokenExpiryDays = int.Parse(_config["Jwt:DurationInDays"]);
+    var tokenExpiryDays = int.Parse(_config["Jwt:DurationInDays"]);
             var token = new JwtSecurityToken(
                 _config["Jwt:Issuer"],
                 _config["Jwt:Audience"],
@@ -151,6 +164,11 @@ namespace project_depi.Controllers
         private bool UserExists(Guid id)
         {
             return _context.Users.Any(e => e.user_id == id);
+        }
+
+        private bool UserExists(string email)
+        {
+            return _context.Users.Any(e => e.email == email);
         }
     }
 }

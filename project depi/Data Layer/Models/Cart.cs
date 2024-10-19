@@ -5,9 +5,9 @@ namespace project_depi.Data_Layer.Models
     public class Cart : EntityBase 
     {
         [Column(TypeName = "decimal(18,4)")]
-        public double totalCartPrice {  get; set; }
+        public double? totalCartPrice { get; set; } = 0;
 
-        public int numOfCartItemt { get; set; }
+        public int? numOfCartItems { get; set; } = 0;
 
         [ForeignKey("User")]
         public Guid cartOwner { get; set; }
@@ -16,7 +16,7 @@ namespace project_depi.Data_Layer.Models
 
         public ICollection<Cart_Product>? Cart_Products { get; set; } = new List<Cart_Product>();
 
-        public DateTime createdAt { get; set; } = new DateTime();
-        public DateTime updatedAt { get; set; } = new DateTime();
+        public DateTime? createdAt { get; set; } = DateTime.UtcNow;
+        public DateTime? updatedAt { get; set; } = DateTime.UtcNow;
     }
 }

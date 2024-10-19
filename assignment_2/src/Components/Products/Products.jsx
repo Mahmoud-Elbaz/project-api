@@ -32,8 +32,9 @@ export default function Products() {
     if(!isLogin){
       toast.error(res.response.data.message);
       return
-    }
-    toast.success(res.data.message.split(" ").slice(0,3).join(" "),{duration:2000})
+    } 
+    const message = res.data.message ? res.data.message.split(" ").slice(0, 3).join(" ") : "Added successfully";
+    toast.success(message, { duration: 2000 });
     setCartNumber(res?.data.numOfCartItems);
   }
 function getData(){
@@ -76,7 +77,7 @@ console.log(data);
                 </Link>
                   <div className="card-btns">
                     <button onClick={()=>{addToCartFunc(ele._id)}} className="btn bg-main text-white my-2 mx-auto d-block">Add to Cart</button>
-                    <button onClick={()=>{addToWishlistFunc(ele._id)}} className="my-2 ms-auto d-block border-0 bg-transparent"><i className="fa-solid fa-heart fs-3 text-danger"></i></button>
+                    {/* <button onClick={()=>{addToWishlistFunc(ele._id)}} className="my-2 ms-auto d-block border-0 bg-transparent"><i className="fa-solid fa-heart fs-3 text-danger"></i></button> */}
                   </div>
             </div>
             </div>)

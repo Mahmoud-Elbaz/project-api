@@ -54,11 +54,11 @@ export default function Navbar() {
               ) : (
                 ""
               )}
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <NavLink to="wishlist" className="nav-link">
                   wishlist
                 </NavLink>
-              </li>
+              </li> */}
               <li className="nav-item">
                 <NavLink to="products" className="nav-link">
                   products

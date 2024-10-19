@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using project_depi.Data_Layer;
+using project_depi.Data_Layer.DTOs;
 using project_depi.Data_Layer.Models;
 using System;
 using System.Collections.Generic;
@@ -44,12 +45,13 @@ namespace project_depi.Controllers
 
         // POST: api/Product
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+        public async Task<ActionResult<Product>> PostProduct(ProductDto product)
         {
-            _context.Products.Add(product);
+            Product newProduct = new Product(product);
+            _context.Products.Add(newProduct);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetProduct), new { id = product._id }, product);
+            return CreatedAtAction(nameof(GetProduct), new { id = newProduct._id }, product);
         }
 
         // PUT: api/Product/5

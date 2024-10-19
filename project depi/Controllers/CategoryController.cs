@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using project_depi.Data_Layer;
+using project_depi.Data_Layer.DTOs;
 using project_depi.Data_Layer.Models;
 using System;
 using System.Collections.Generic;
@@ -43,12 +44,13 @@ namespace project_depi.Controllers
 
         // POST: api/Category
         [HttpPost]
-        public async Task<ActionResult<Category>> PostCategory(Category category)
+        public async Task<ActionResult<Category>> PostCategory(CategoryDto category)
         {
-            _context.Categories.Add(category);
+            Category newCategory = new Category(category);
+            _context.Categories.Add(newCategory);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetCategory), new { id = category._id }, category);
+            return CreatedAtAction(nameof(GetCategory), new { id = newCategory._id }, category);
         }
 
         // PUT: api/Category/5

@@ -1,10 +1,31 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using project_depi.Data_Layer.DTOs;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace project_depi.Data_Layer.Models
 {
     public class Product : EntityBase
     {
+
+        public Product() { }
+
+        public Product(ProductDto p)
+        {
+            this.title = p.title;
+            this.barndId = p.barndId;
+            this.categoryId = p.categoryId;
+            this.price = p.price;
+            this.priceAfterDiscount = p.priceAfterDiscount;
+            this.quantity = p.quantity;
+            this.ratingsAverage = p.ratingsAverage;
+            this.ratingsQuantity = p.ratingsQuantity;
+            this.slug = p.slug;
+            this.imageCover = p.imageCover;
+            this.description = p.description;
+            this.availableColors = p.availableColors;
+            this.sold = p.sold;
+        }
+
         public string title { get; set; }
 
         [ForeignKey("Brand")]
@@ -37,8 +58,8 @@ namespace project_depi.Data_Layer.Models
         public string[] availableColors { get; set; }
 
         public int sold { get; set; }
-        public DateTime createdAt { get; set; } = new DateTime();
-        public DateTime updatedAt { get; set; } = new DateTime();
+        public DateTime createdAt { get; set; } = DateTime.UtcNow;
+        public DateTime updatedAt { get; set; } = DateTime.UtcNow;
 
         public virtual ICollection<SubCategory>? subCategories { get; set; } = new List<SubCategory>();
     }

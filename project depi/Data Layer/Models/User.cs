@@ -1,6 +1,8 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Xml.Linq;
 
 namespace project_depi.Data_Layer.Models
 {
@@ -30,8 +32,8 @@ namespace project_depi.Data_Layer.Models
         [Phone]
         public string phone { get; set; }
 
-        public DateTime? createdAt { get; set; } = new DateTime();
-        public DateTime? updatedAt { get; set; } = new DateTime();
+        public DateTime? createdAt { get; set; } = DateTime.UtcNow;
+        public DateTime? updatedAt { get; set; } = DateTime.UtcNow;
 
 
     }

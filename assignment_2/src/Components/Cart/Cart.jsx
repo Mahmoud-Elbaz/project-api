@@ -17,30 +17,33 @@ export default function Cart() {
   async function getCartFunc() {
     setLoading(true)
     let res = await getCart();
-    if (res?.data?.status === "success"){
+    console.log(res?.data)
+    if (res?.data){
       setData(res?.data);
       setCartNumber(res?.data.numOfCartItems);
-      setCartId(res?.data.data._id)
+      setCartId(res?.data._id)
       setLoading(false)
     }
     setLoading(false)
   }
   // delete item
   async function delCartItemFunc(id) {
-    let res = await delCartItem(id);
-    console.log(res);
-    if (res.data.status === "success") {
-      getCartFunc();
-      toast.success("Item removed succesfully", { duration: 1500 });
-    }
+    try{
+        let res  = await delCartItem(id);
+        console.log(res)
+        getCartFunc();
+        toast.success("Item removed succesfully", { duration: 1500 });
+    }catch(err){
+        toast.success("Item removed Failed", { duration: 1500 });
+    } 
   }
   // update count
   async function updateCartItemFunc(id,count) {
     let res = await updateCartItem(id,count);
     console.log(res);
-    if (res.data.status === "success") {
+    if (res.data) {
       getCartFunc();
-      console.log(res.data.data.products);
+      //console.log(res.data.data.products);
       // if(res.data.data.products.count<=0){
       //   delCartItemFunc(id)
       // }
@@ -85,12 +88,12 @@ export default function Cart() {
         {loading?<Loading></Loading>:
           <div className="cart-box p-3 bg-main-light">
             <h1 className="">Shop Cart</h1>
-            {data && data?.data.totalCartPrice  ? (
+            {data ? (
               <>
                 <h2 className="h3 text-main">
-                  Total Price: {data?.data.totalCartPrice}
+                  Total Price: {data?.totalCartPrice}
                 </h2>
-                {data?.data.products.map((ele) => (
+                {data?.["cart_Products"].map((ele) => (
                   <div key={ele.product._id} className="row align-items-center">
                     <div className="col-md-9">
                       <div className="row my-3 align-items-center">
@@ -126,7 +129,7 @@ export default function Cart() {
                     </div>
                   </div>
                 ))}
-                <button className="btn btn-success border-0 bg-main" onClick={getForm}>Check out</button>
+                {/* <button className="btn btn-success border-0 bg-main" onClick={getForm}>Check out</button> */}
               </>
             ) : (
               <p className="fw-bold p-3">Your Cart is Empty</p>

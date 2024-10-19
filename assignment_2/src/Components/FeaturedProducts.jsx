@@ -27,12 +27,12 @@ export default function FeaturedProducts() {
   async function addToCartFunc(id){
     console.log("Running addToCartFunc");
     let res = await addToCart(id)
-
+    console.log(res)
     if(!isLogin){
       toast.error(res.response.data.message);
       return
     }
-    toast.success(res.data.message.split(" ").slice(0,3).join(" "),{duration:2000})
+    toast.success("Added succefully",{duration:2000})
     setCartNumber(res?.data.numOfCartItems);
   }
 

@@ -17,15 +17,15 @@ export default function Login() {
   async function submitLogin(values) {
     setLoading(true);
     console.log(values);
-    let { data } = await axios
-      .post(`${process.env.REACT_APP_BaseUrl}/api/v1/auth/signin`, values)
+    let {data} = await axios
+      .post(`${process.env.REACT_APP_BaseUrl}/api/user/login`, values)
       .catch((err) => {
         setLoading(false);
         // console.log(err);
         // console.log(err.response.data.message);
         setError(err.response.data.message);
       });
-    // console.log(data);
+    console.log(data);
     if (data.message === "success") {
       setError("");
       setLoading(false);

@@ -20,6 +20,8 @@ namespace project_depi.Data_Layer
             modelBuilder.Entity<Product>().HasOne(x=>x.Brand).WithMany(y => y.products).HasForeignKey(x => x.barndId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Product>().HasOne(x => x.Category).WithMany(y => y.products).HasForeignKey(x => x.categoryId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Product>().HasMany(x => x.subCategories).WithOne(y => y.Product).HasForeignKey(x => x.productId).OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<User>().HasIndex(x=>x.email).IsUnique(true);
         }
 
         public DbSet<User> Users { get; set; }
